@@ -3,7 +3,7 @@
 v = '0.0.1'
 c = 'Copyright (C) 2024 Ray Mentose.'
 man="""
-Garmin Macros: Utilities & Helper Functions for Garmin Connect.
+Garmin Macros: Utilities & helper functions for Garmin Connect.
 --
 Usage
 

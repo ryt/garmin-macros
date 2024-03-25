@@ -1,5 +1,5 @@
 # garmin-macros
-A personal collection of helpers and utilities for the Garmin Connect app and website.
+A collection of personal helpers and utilities for the Garmin Connect app and website.
 
 #### Usage
 
