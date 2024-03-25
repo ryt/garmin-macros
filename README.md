@@ -15,17 +15,17 @@ Show the help manual.
 
 ```console
 gm
-gm man|help
+gm  man|help
 ```
 
 Retrieve and export all garmin activities for given month as a json file. Exported files are stored inside a `logs/YYYY/` directory. 
 
 > The same logs directory can be shared with [activity-metrics](https://github.com/ryt/activity-metrics) if the garmin module is used in activity metrics.
 
-```console
-gm cur|current|tod|today|month
-gm {YYYY-MM}
-gm 2024-01
+```shell
+gm  cur|current|tod|today|month
+gm  {YYYY-MM}
+gm  2024-01
 ```
 
 #### Libraries
