@@ -7,14 +7,14 @@ Garmin Macros: Utilities & helper functions for Garmin Connect.
 --
 Usage
 
-  param[0]         param[1]
-  -------------------------
+  param[0]      param[1]
+  ----------------------
   Retrieve all activities for given month and export them as a json file.
   -----------------------------------------------------------------------
-  ./gm              (YYYY-MM|tod|today|now|cur|current|month)
+  gm            (YYYY-MM|tod|today|now|cur|current|month)
 
-  ./gm              (man|help|-h|--help)
-  ./gm              (-v|--version)
+  gm            (man|help|-h|--help)
+  gm            (-v|--version)
 --
 
 """
