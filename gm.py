@@ -89,7 +89,7 @@ api = None
 
 
 today = datetime.date.today()
-logs_dir = '/Users/ray/Desktop/Metrics/logs/' # currently shared with activity-metrics
+logs_dir = f'{os.path.abspath(os.curdir)}/logs/' # can be shared with activity-metrics
 
 
 
