@@ -22,7 +22,7 @@ Retrieve and export all garmin activities for given month as a json file. Export
 
 > The same logs directory can be shared with [activity-metrics](https://github.com/ryt/activity-metrics) if the garmin module is used in activity metrics.
 
-```shell
+```console
 gm  cur|current|tod|today|month
 gm  {YYYY-MM}
 gm  2024-01
