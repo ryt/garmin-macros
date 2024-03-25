@@ -13,7 +13,7 @@ alias gm='{install_dir}/garmin-macros/gm'
 
 Show the help manual.
 
-``` bash
+```console
 gm
 gm man|help
 ```
@@ -22,9 +22,11 @@ Retrieve and export all garmin activities for given month as a json file. Export
 
 > The same logs directory can be shared with [activity-metrics](https://github.com/ryt/activity-metrics) if the garmin module is used in activity metrics.
 
-    gm cur|current|tod|today|month
-    gm {YYYY-MM}
-    gm 2024-01
+```console
+gm cur|current|tod|today|month
+gm {YYYY-MM}
+gm 2024-01
+```
 
 #### Libraries
 This project uses [python-garminconnect](https://github.com/cyberjunky/python-garminconnect) and [Garth](https://github.com/matin/garth) to connect to the Garmin API. It was also originally created to be complementary to [activity-metrics](https://github.com/ryt/activity-metrics), and the same logs directories can be shared by the two projects. The garmin module in activity metrics can also read and use the same exported json files.
