@@ -9,8 +9,8 @@ Usage
 
   param[0]         param[1]
   -------------------------
-  Retrieve all activities for given month and export them as json log for ryt/activity-metrics.
-  ---------------------------------------------------------------------------------------------
+  Retrieve all activities for given month and export them as a json file.
+  -----------------------------------------------------------------------
   ./gm              (YYYY-MM|tod|today|now|cur|current|month)
 
   ./gm              (man|help|-h|--help)
@@ -89,7 +89,7 @@ api = None
 
 
 today = datetime.date.today()
-logs_dir = '/Users/ray/Desktop/Metrics/logs/'
+logs_dir = '/Users/ray/Desktop/Metrics/logs/' # currently shared with activity-metrics
 
 
 
