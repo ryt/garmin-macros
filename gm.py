@@ -28,7 +28,7 @@ import datetime
 
 from garth.exc import GarthHTTPError
 
-sys.path.append('lib/python-garminconnect')
+sys.path.append(f'{os.path.dirname(os.path.abspath(os.path.realpath(__file__)))}/lib/python-garminconnect')
 
 from garminconnect import (
   Garmin,
