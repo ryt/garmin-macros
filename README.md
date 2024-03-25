@@ -5,15 +5,18 @@ A collection of personal helpers and utilities for the Garmin Connect app and we
 
 Create an alias that points to `gm`.
 
-    alias gm='{install_dir}/garmin-macros/gm'
-
+```bash
+alias gm='{install_dir}/garmin-macros/gm'
+```
 
 #### Usage
 
 Show the help manual.
 
-    gm
-    gm man|help
+``` bash
+gm
+gm man|help
+```
 
 Retrieve and export all garmin activities for given month as a json file. Exported files are stored inside a `logs/YYYY/` directory. 
 
