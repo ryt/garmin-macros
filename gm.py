@@ -2,6 +2,7 @@
 
 import os
 import sys
+import json
 import datetime
 
 from garth.exc import GarthHTTPError
@@ -91,6 +92,9 @@ activityfile = 'activity.fit'  # Supported file types are: .fit .gpx .tcx
 weight = 89.6
 weightunit = 'kg'
 
+def to_json(output):
+  return json.dumps(output, indent=2)
+
 
 def main():
 
@@ -98,7 +102,17 @@ def main():
 
   api = init_api(email, password)
 
-  print(api.get_activities_fordate(today.isoformat()))
+  #print(api.get_activities_fordate(today.isoformat()))
+
+  # get this month
+
+  act_this_month = to_json(api.get_activities_by_date('2024-03-01',today))
+
+  f = open('/Users/ray/Desktop/march.json', 'w')
+  f.write(act_this_month)
+  f.close()
+
+  print(act_this_month)
 
 
 
