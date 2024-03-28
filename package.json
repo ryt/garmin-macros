@@ -2,6 +2,6 @@
   "name": "git",
   "private": true,
   "workspaces": [
-    "gm-dash-next"
+    "gm-dash"
   ]
 }
