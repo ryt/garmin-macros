@@ -30,15 +30,15 @@ gm  2024-01
 
 #### Using the Dashboard
 
-The current (under construction) version of the dashboard is found in the `gm-dash/` directory. The directory contains a Next.js app as well as a single page html app found in [`gm-dash/public/gm-dash.html`](gm-dash/public/gm-dash.html).
+The current (under construction) version of the dashboard is found in the `gm-dash` directory. The directory contains a Next.js app as well as a single page html app found in [`gm-dash/public/gm-dash.html`](gm-dash/public/gm-dash.html).
 
-To install & use the single page app with activity-metrics, create a symlink to `gm-dash.html` in your `gen` directory. Replace `{install}` with your installation directory.
+To install & use the single page app with activity-metrics, simply copy `gm-dash.html` to your `gen` directory. You can also use the command `cpd` or `copy-dash` as shown below:
 
 ```console
-cd Metrics/gen
-ln -s {install}/garmin-macros/gm-dash/public/gm-dash.html gm-dash.html
+gm cpd        Metrics/gen
+gm copy-dash  Metrics/gen
 ```
-After creating the link, open `gm-dash.html` in your browser to access the dashboard.
+After copying, open `gm-dash.html` in your browser to access the dashboard.
 
 
 #### Libraries

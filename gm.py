@@ -13,6 +13,11 @@ Usage
   -----------------------------------------------------------------------
   gm            (YYYY-MM|tod|today|now|cur|current|month)
 
+
+  Copy gm-dash.html to the gen directory of your personal 'Metrics' location.
+  ---------------------------------------------------------------------------
+  gm            (cpd|copy-dash)           {gen_directory}
+
   gm            (man|help|-h|--help)
   gm            (-v|--version)
 --
@@ -23,6 +28,7 @@ import os
 import re
 import sys
 import json
+import shutil
 import calendar
 import datetime
 
@@ -103,6 +109,13 @@ def main():
 
   elif sys.argv[1] in ('man','help','-h','--help'):
     return print(man.strip())
+
+  elif sys.argv[1] in ('cpd','copy-dash'):
+    gmdash = f'{os.path.dirname(os.path.abspath(os.path.realpath(__file__)))}/gm-dash/public/gm-dash.html'
+    cpfile = sys.argv[2] + '/' if len(sys.argv) == 3 else './'
+    cpfile = f"{cpfile.strip('/')}/gm-dash.html"
+    shutil.copyfile(gmdash, cpfile)
+    return print(f'Successfully copied: {gmdash} -> {cpfile}')
 
   else:
 
