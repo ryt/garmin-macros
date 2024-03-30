@@ -28,18 +28,22 @@ gm  2024-01
 > The same logs directory can be shared with [activity-metrics](https://github.com/ryt/activity-metrics) if the garmin module is used in activity metrics.
 > 
 
-#### Using the Dashboard
+#### CSV Rendering & Display
 
-The current (under construction) version of the dashboard is found in the `gm-dash` directory. The directory contains a Next.js app as well as a single page html app found in [`gm-dash/public/gm-dash.html`](gm-dash/public/gm-dash.html).
+The `gencsv` command can combine all the JSON files for a given year and generate a simple readable CSV file with all the activities of the year. The command can also be used with the shortcuts `gen` and `-g`. 
 
-To install & use the single page app with activity-metrics, simply copy `gm-dash.html` to your `gen` directory. You can also use the command `cpd` or `copy-dash` as shown below:
+Once generated, the CSV file will be saved inside a directory named `gen/services/garmin/` on the same level as the `logs/` directory. If those directories don't exist, be sure to create them before you run the command.
+
+> If you are using [activity-metrics](https://github.com/ryt/activity-metrics), the `gen` directory is also used to save generated CSV files for activity logs.
 
 ```console
-gm cpd        Metrics/gen
-gm copy-dash  Metrics/gen
+gm  gencsv|gen|-g   {YYYY}
+gm  gencsv|gen|-g   2024
 ```
-After copying, open `gm-dash.html` in your browser to access the dashboard.
 
+Additional Note: In this project's main repository, the are currently two under constructions developments of a built-in dashboard: one is a Flask app (gmdash.py) and the other is a Next.js app (gm-dash/ directory). Neither of those projects are currently operational and can be safely ignored.
+
+Also, if you'd like to view generated CSV files through the browser, you can download and use [webcsv](https://github.com/ryt/webcsv) which is built with Flask and goes hand-in-hand with this project as well as activity-metrics.
 
 #### Libraries
 This project uses [python-garminconnect](https://github.com/cyberjunky/python-garminconnect) and [Garth](https://github.com/matin/garth) to connect to the Garmin API. It was also originally created to be complementary to [activity-metrics](https://github.com/ryt/activity-metrics), and the same logs directories can be shared by the two projects. The garmin module in activity metrics can also read and use the same exported json files.

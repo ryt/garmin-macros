@@ -7,19 +7,26 @@ Garmin Macros: Utilities & helper functions for Garmin Connect.
 --
 Usage
 
-  param[0]      param[1]
-  ----------------------
-  Retrieve all activities for given month and export them as a json file.
-  -----------------------------------------------------------------------
+  param[0]      param[1]            param[2]
+  --------      --------            --------
+
+  Retrieve all activities for given month and export them as a json file
+  ----------------------------------------------------------------------
   gm            (YYYY-MM|tod|today|now|cur|current|month)
 
+  Combine all activity json files for a given year and convert them to a simplified CSV
+  -------------------------------------------------------------------------------------
+  gm            (gencsv|gen|-g)     {year}
 
-  Copy gm-dash.html to the gen directory of your personal 'Metrics' location.
-  ---------------------------------------------------------------------------
-  gm            (cpd|copy-dash)           {gen_directory}
+  Copy gmdash.html to the gen directory of your personal 'Metrics' location
+  -------------------------------------------------------------------------
+  gm            (cpd|copy-dash)     {gen_directory}
 
+  Help manual and version
+  -----------------------
   gm            (man|help|-h|--help)
   gm            (-v|--version)
+
 --
 
 """
@@ -86,6 +93,25 @@ def to_json(output):
   return json.dumps(output, indent=2)
 
 
+def escape_for_csv(input):
+  """Prepares the given input for csv output"""
+  if isinstance(input, str):
+    # escape a double quote (") with additional double quote ("")
+    value = input.replace('"', '""')
+    value = '"' + value + '"'
+    return value
+  else:
+    return input
+
+
+def preserve_keys(data, pres):
+  """Preserves only the list of keys in 'pres' for given dict 'data'"""
+  resp = []
+  for d in data:
+    resp.append({key: d[key] for key in pres if key in d})
+  return resp
+
+
 
 email = os.getenv('EMAIL')
 password = os.getenv('PASSWORD')
@@ -96,6 +122,8 @@ api = None
 
 today = datetime.date.today()
 logs_dir = f'{os.path.abspath(os.curdir)}/logs/' # can be shared with activity-metrics
+gen_dir  = f'{os.path.abspath(os.curdir)}/gen/' # can also be shared with activity-metrics
+gen_srv  = f'{gen_dir}services/garmin/'
 
 
 
@@ -116,6 +144,53 @@ def main():
     cpfile = f"{cpfile.strip('/')}/gm-dash.html"
     shutil.copyfile(gmdash, cpfile)
     return print(f'Successfully copied: {gmdash} -> {cpfile}')
+
+  elif sys.argv[1] in ('gencsv','-g'):
+    if len(sys.argv) == 3 and sys.argv[2]:
+      year = sys.argv[2]
+      ydir = f'{logs_dir}{year}/'
+      gen_csv_file = f'{gen_srv}{year}-garmin-activities.csv'
+
+      if os.path.exists(ydir) and os.path.isdir(ydir):
+        files = os.listdir(ydir)
+        garmin_files = sorted([file for file in files if file.startswith(f'garmin-{year}-')])
+
+        if garmin_files:
+          print(f'Combining all ({len(garmin_files)}) json files for year {year}.')
+          combined_data = []
+          for file in garmin_files:
+            with open(f'{ydir}{file}', 'r') as data:
+              json_data = json.load(data)
+              combined_data.append(json_data)
+
+          flattened_data = [item for sublist in combined_data for item in sublist]
+          # temp ignore: 'activityType'
+          final_data = preserve_keys(flattened_data, ['activityId','activityName','startTimeLocal','distance','duration','averageSpeed','maxSpeed','averageHR','maxHR','description'])
+          final_data = sorted(final_data, key=lambda x: datetime.datetime.strptime(x['startTimeLocal'], '%Y-%m-%d %H:%M:%S'), reverse=True)
+
+          print('- Converting JSON to CSV...')
+
+          columns = list(final_data[0].keys())
+          csv_string = ','.join(columns) + '\n'
+          for row in final_data:
+            csv_string += ','.join(str(escape_for_csv(row[column])) for column in columns) + '\n'
+
+          print('- JSON successfully converted to CSV.')
+
+          f = open(gen_csv_file, 'w')
+          f.write(csv_string)
+          f.close()
+
+          print(f'File {gen_csv_file} successfully saved.')
+
+        else:
+          print(f'Sorry, we could not find any json files for the year {year}.')
+
+      else:
+        print(f'Sorry, the directory {ydir} could not be found.')
+
+    else:
+      return print('Please enter a valid year value.')
 
   else:
 
