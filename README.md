@@ -3,10 +3,10 @@ A collection of personal helpers and utilities for the Garmin Connect app and we
 
 #### Install
 
-Create an alias that points to `gm`. Replace `{install}` with your installation directory.
+Create an alias that points to `gm.py`. Replace `{install}` with your installation directory.
 
 ```bash
-alias gm='{install}/garmin-macros/gm'
+alias gm='{install}/garmin-macros/gm.py'
 ```
 
 #### Usage

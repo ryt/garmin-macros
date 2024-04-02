@@ -36,6 +36,7 @@ import re
 import sys
 import json
 import shutil
+import requests
 import calendar
 import datetime
 
@@ -145,7 +146,7 @@ def main():
     shutil.copyfile(gmdash, cpfile)
     return print(f'Successfully copied: {gmdash} -> {cpfile}')
 
-  elif sys.argv[1] in ('gencsv','-g'):
+  elif sys.argv[1] in ('gencsv','gen','-g'):
     if len(sys.argv) == 3 and sys.argv[2]:
       year = sys.argv[2]
       ydir = f'{logs_dir}{year}/'
