@@ -181,6 +181,12 @@ def convert_unit(val, conv):
     else:
       return 0
 
+  elif conv == 'ms_to_mph':
+    if val and not val == 'None':
+      return round(val * 2.23694, 2)
+    else:
+      return 0
+
   return val
 
 
@@ -225,6 +231,12 @@ def process_gencsv_year(arg1, arg2, arg3):
         # convert the default duration unit: seconds -> duration (i.e. hh:mm:ss)
         final_data = [{k: convert_unit(v, 'seconds_to_duration') if k == 'duration' else v for k, v in fd.items()} for fd in final_data]
 
+        # convert the default averageSpeed unit: m/s -> mph
+        final_data = [{k: convert_unit(v, 'ms_to_mph') if k == 'averageSpeed' else v for k, v in fd.items()} for fd in final_data]
+
+        # convert the default maxSpeed unit: m/s -> mph
+        final_data = [{k: convert_unit(v, 'ms_to_mph') if k == 'maxSpeed' else v for k, v in fd.items()} for fd in final_data]
+
         # sort the list by startTimeLocal with recent times at the top
         final_data = sorted(final_data, key=lambda x: datetime.datetime.strptime(x['startTimeLocal'], '%Y-%m-%d %H:%M:%S'), reverse=True)
 
@@ -234,6 +246,10 @@ def process_gencsv_year(arg1, arg2, arg3):
         csv_string = ','.join(columns) + '\n'
         for row in final_data:
           csv_string += ','.join(str(escape_for_csv(row[column])) for column in columns) + '\n'
+
+        csv_string = re.sub('distance',       'distance (mi)',    csv_string, 1)
+        csv_string = re.sub('averageSpeed',   'avg speed (mph)',  csv_string, 1)
+        csv_string = re.sub('maxSpeed',       'max speed (mph)',  csv_string, 1)
 
         print('- JSON successfully converted to CSV.')
 
