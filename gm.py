@@ -263,7 +263,7 @@ def process_gencsv_year(arg1, arg2, arg3):
           flattened_data[i]['averageHR'] = round(item['averageHR'] or 0, 2)
           flattened_data[i]['maxHR'] = round(item['maxHR'] or 0, 2)
 
-          if item['activityType']['typeKey'] in ('running','walking','cycling','hiking'):
+          if item['activityType']['typeKey'] in ('running','treadmill_running','walking','cycling','hiking'):
 
             flattened_data[i]['distance'] = convert_unit(item['distance'], 'meters_to_miles')
             flattened_data[i]['duration']   = convert_unit(item['duration'], 'seconds_to_duration')
