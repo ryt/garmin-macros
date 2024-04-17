@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-v = '0.0.1'
+v = '0.0.2'
 c = 'Copyright (C) 2024 Ray Mentose.'
 man="""
 Garmin Macros: Utilities & helper functions for Garmin Connect.
@@ -163,11 +163,15 @@ def process_export_activities_month(arg1):
 def convert_unit(val, conv):
   """Unit converter function"""
 
+  # convert the default distance unit: meter -> miles (i.e. divide by 1609.34)
+
   if conv == 'meters_to_miles':
     if val:
       return round(float(val)/1609.34, 2)
     else:
       return 0
+
+  # convert the default duration unit: seconds -> duration (i.e. hh:mm:ss)
 
   elif conv == 'seconds_to_duration':
     if val:
@@ -181,11 +185,26 @@ def convert_unit(val, conv):
     else:
       return 0
 
+  # convert the default averageSpeed unit: m/s -> mph
+
   elif conv == 'ms_to_mph':
     if val and not val == 'None':
       return round(val * 2.23694, 2)
     else:
       return 0
+
+  # convert miles per hour (mph) to min sec / mile (pace)
+
+  elif conv == 'mph_to_minsecmi':
+    if val and not val == 'None':
+      # conversion step 1: 60 / mph = min / mi
+      # conversion step 2: convert to seconds -> duration
+      minmi = 60 / val
+      secmi = 60 * minmi
+      return convert_unit(secmi, 'seconds_to_duration')
+    else:
+      return convert_unit(0, 'seconds_to_duration')
+
 
   return val
 
@@ -193,6 +212,9 @@ def convert_unit(val, conv):
 def process_gencsv_year(arg1, arg2, arg3):
   """Combine all activity json files for a given year and convert them to a simplified CSV"""
   global gen_srv
+
+  if arg2 in ('now','cur','current','tod','today','month','year'):
+    arg2 = today.strftime('%Y')
 
   if arg2:
     year = arg2
@@ -219,23 +241,57 @@ def process_gencsv_year(arg1, arg2, arg3):
 
         flattened_data = [item for sublist in combined_data for item in sublist]
 
-        # temp ignore: 'activityType'
+        # example: activityType
+        """
+        activityType {
+          typeId       : 13,
+          typeKey      : strength_training,
+          parentTypeId : 29,
+          isHidden     : False,
+          restricted   : False,
+          trimmable    : False
+        }
+        """
+
+        copy_flattened = flattened_data
+
+        for i, item in enumerate(copy_flattened):
+
+          flattened_data[i]['activityTypeName'] = item['activityType']['typeKey']
+          flattened_data[i]['activityTypeId']   = item['activityType']['typeId']
+
+          flattened_data[i]['averageHR'] = round(item['averageHR'] or 0, 2)
+          flattened_data[i]['maxHR'] = round(item['maxHR'] or 0, 2)
+
+          if item['activityType']['typeKey'] in ('running','walking','cycling','hiking'):
+
+            flattened_data[i]['distance'] = convert_unit(item['distance'], 'meters_to_miles')
+            flattened_data[i]['duration']   = convert_unit(item['duration'], 'seconds_to_duration')
+
+            flattened_data[i]['averageSpeed'] = convert_unit(item['averageSpeed'], 'ms_to_mph')
+            flattened_data[i]['maxSpeed']   = convert_unit(item['maxSpeed'], 'ms_to_mph')
+
+            flattened_data[i]['avgPaceMinSecMI'] = convert_unit(item['averageSpeed'], 'mph_to_minsecmi')
+            flattened_data[i]['maxPaceMinSecMI'] = convert_unit(item['maxSpeed'], 'mph_to_minsecmi')
+
+          else:
+
+            flattened_data[i]['distance'] = 0
+            flattened_data[i]['duration'] = 0
+            flattened_data[i]['averageSpeed'] = 0
+            flattened_data[i]['maxSpeed'] = 0
+            flattened_data[i]['avgPaceMinSecMI'] = 0
+            flattened_data[i]['maxPaceMinSecMI'] = 0
+
+        del copy_flattened
+
+
         final_data = preserve_keys(flattened_data, [
-          'activityId','activityName','startTimeLocal','distance','duration',
-          'averageSpeed','maxSpeed','averageHR','maxHR','description',
+          'activityId','activityName','activityTypeName','activityTypeId',
+          'startTimeLocal','distance','duration',
+          'averageSpeed','maxSpeed','avgPaceMinSecMI','maxPaceMinSecMI',
+          'averageHR','maxHR','description',
         ])
-
-        # convert the default distance unit: meter -> miles (i.e. divide by 1609.34)
-        final_data = [{k: convert_unit(v, 'meters_to_miles') if k == 'distance' else v for k, v in fd.items()} for fd in final_data]
-
-        # convert the default duration unit: seconds -> duration (i.e. hh:mm:ss)
-        final_data = [{k: convert_unit(v, 'seconds_to_duration') if k == 'duration' else v for k, v in fd.items()} for fd in final_data]
-
-        # convert the default averageSpeed unit: m/s -> mph
-        final_data = [{k: convert_unit(v, 'ms_to_mph') if k == 'averageSpeed' else v for k, v in fd.items()} for fd in final_data]
-
-        # convert the default maxSpeed unit: m/s -> mph
-        final_data = [{k: convert_unit(v, 'ms_to_mph') if k == 'maxSpeed' else v for k, v in fd.items()} for fd in final_data]
 
         # sort the list by startTimeLocal with recent times at the top
         final_data = sorted(final_data, key=lambda x: datetime.datetime.strptime(x['startTimeLocal'], '%Y-%m-%d %H:%M:%S'), reverse=True)
@@ -247,9 +303,9 @@ def process_gencsv_year(arg1, arg2, arg3):
         for row in final_data:
           csv_string += ','.join(str(escape_for_csv(row[column])) for column in columns) + '\n'
 
-        csv_string = re.sub('distance',       'distance (mi)',    csv_string, 1)
-        csv_string = re.sub('averageSpeed',   'avg speed (mph)',  csv_string, 1)
-        csv_string = re.sub('maxSpeed',       'max speed (mph)',  csv_string, 1)
+        csv_string = re.sub('distance',       'distanceMI',    csv_string, 1)
+        csv_string = re.sub('averageSpeed',   'avgSpeedMPH',  csv_string, 1)
+        csv_string = re.sub('maxSpeed',       'maxSpeedMPH',  csv_string, 1)
 
         print('- JSON successfully converted to CSV.')
 
