@@ -119,7 +119,7 @@ api = None
 
 today = datetime.date.today()
 logs_dir = f'{os.path.abspath(os.curdir)}/logs/' # can be shared with activity-metrics
-gen_dir  = f'{os.path.abspath(os.curdir)}/gen/' # can also be shared with activity-metrics
+gen_dir  = f'{os.path.abspath(os.curdir)}/gen/'  # can also be shared with activity-metrics
 gen_srv  = f'{gen_dir}services/garmin/'
 
 def process_export_activities_month(arg1):
@@ -144,7 +144,7 @@ def process_export_activities_month(arg1):
   input_month_start = datetime.datetime(im_year_int, im_month_int, 1).strftime('%Y-%m-%d')
   input_month_end   = datetime.datetime(im_year_int, im_month_int, im_last_day).strftime('%Y-%m-%d')
 
-  logs_dir_year = f'{logs_dir}{im_year}/'
+  logs_dir_year = f'{logs_dir}{im_year}/json/'
   log_json_file = f'{logs_dir_year}garmin-{im_year}-{im_month}.json'
 
   if not os.path.isdir(logs_dir_year):
@@ -218,7 +218,7 @@ def process_gencsv_year(arg1, arg2, arg3):
 
   if arg2:
     year = arg2
-    ydir = f'{logs_dir}{year}/'
+    ydir = f'{logs_dir}{year}/json/'
     gen_srv = f'{gen_srv}{arg3}/' if arg3 else gen_srv
     gen_csv_file = f'{gen_srv}{year}-garmin-activities.csv'
 
