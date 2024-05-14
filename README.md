@@ -46,4 +46,4 @@ This project uses [python-garminconnect](https://github.com/cyberjunky/python-ga
 
 #### Related Projects
 
-(Author Notes) Aside from activity metrics, which includes a web interface with a specific module for viewing and analyzing the garmin data, if you'd like to simply view generated CSV files through the browser, you can download and use my related project [webcsv](https://github.com/ryt/webcsv) which is a lightweight Flask-based csv viewer for the web.
+(Author Notes) Aside from activity metrics, which includes a web interface with a specific module for viewing and analyzing the garmin data, if you'd like to simply view generated CSV files through the browser, you can download and use my related project [webcsv](https://github.com/ryt/webcsv), which is a lightweight Flask-based csv viewer for the web.
