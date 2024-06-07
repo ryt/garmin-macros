@@ -262,6 +262,7 @@ def process_gencsv_year(arg1, arg2, arg3):
 
           flattened_data[i]['averageHR'] = round(item['averageHR'] or 0, 2)
           flattened_data[i]['maxHR'] = round(item['maxHR'] or 0, 2)
+          flattened_data[i]['description']  = item['description'] if 'description' in item else ''
 
           if item['activityType']['typeKey'] in ('running','treadmill_running','walking','cycling','hiking'):
 
@@ -301,7 +302,7 @@ def process_gencsv_year(arg1, arg2, arg3):
         columns = list(final_data[0].keys())
         csv_string = ','.join(columns) + '\n'
         for row in final_data:
-          csv_string += ','.join(str(escape_for_csv(row[column])) for column in columns) + '\n'
+          csv_string += ','.join(str(escape_for_csv(row[column] if column in row else '')) for column in columns) + '\n'
 
         csv_string = re.sub('distance',       'distanceMI',    csv_string, 1)
         csv_string = re.sub('averageSpeed',   'avgSpeedMPH',  csv_string, 1)
