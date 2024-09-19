@@ -43,8 +43,8 @@ gm  gencsv|gen|-g   2024
 
 This project uses [python-garminconnect](https://github.com/cyberjunky/python-garminconnect) and [Garth](https://github.com/matin/garth) to connect to the Garmin API.
 
-##### Notes on Related Projects
+##### Related Projects
 
 - <i id="n1">1</i>: The specific naming of the directories comes from the fact that data storage locations are shared with a related project: [activity-metrics](https://github.com/ryt/activity-metrics). The `logs/` and `gen/` directories are used for log files and generated CSV files in activity metrics. This project was originally created to be complementary to activity metrics. The garmin module in activity metrics can also read and use the same exported json files.
 
-- Also, aside from activity metrics, which includes a web interface with a specific module for viewing and analyzing the garmin data, if you'd like to simply view generated CSV files through the browser, you can download and use my other related project, [webcsv](https://github.com/ryt/webcsv), which is a lightweight Flask-based csv viewer for the web.
+- Also, aside from activity metrics, which comes with a web interface for viewing and analyzing garmin data, if you'd like to simply view generated CSV files on your browser, you can use my other related project, [webcsv](https://github.com/ryt/webcsv), which is a lightweight Flask-based csv viewer.

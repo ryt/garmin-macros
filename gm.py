@@ -260,8 +260,8 @@ def process_gencsv_year(arg1, arg2, arg3):
           flattened_data[i]['activityTypeName'] = item['activityType']['typeKey']
           flattened_data[i]['activityTypeId']   = item['activityType']['typeId']
 
-          flattened_data[i]['averageHR'] = round(item['averageHR'] or 0, 2)
-          flattened_data[i]['maxHR'] = round(item['maxHR'] or 0, 2)
+          flattened_data[i]['averageHR'] = round(item['averageHR'] or 0, 2) if 'averageHR' in item else 0
+          flattened_data[i]['maxHR'] = round(item['maxHR'] or 0, 2) if 'maxHR' in item else 0
           flattened_data[i]['description']  = item['description'] if 'description' in item else ''
 
           if item['activityType']['typeKey'] in ('running','treadmill_running','walking','cycling','hiking'):
@@ -269,11 +269,11 @@ def process_gencsv_year(arg1, arg2, arg3):
             flattened_data[i]['distance'] = convert_unit(item['distance'], 'meters_to_miles')
             flattened_data[i]['duration']   = convert_unit(item['duration'], 'seconds_to_duration')
 
-            flattened_data[i]['averageSpeed'] = convert_unit(item['averageSpeed'], 'ms_to_mph')
-            flattened_data[i]['maxSpeed']   = convert_unit(item['maxSpeed'], 'ms_to_mph')
+            flattened_data[i]['averageSpeed'] = convert_unit(item['averageSpeed'], 'ms_to_mph')  if 'averageSpeed' in item else ''
+            flattened_data[i]['maxSpeed']   = convert_unit(item['maxSpeed'], 'ms_to_mph')  if 'maxSpeed' in item else ''
 
-            flattened_data[i]['avgPaceMinSecMI'] = convert_unit(item['averageSpeed'], 'mph_to_minsecmi')
-            flattened_data[i]['maxPaceMinSecMI'] = convert_unit(item['maxSpeed'], 'mph_to_minsecmi')
+            flattened_data[i]['avgPaceMinSecMI'] = convert_unit(item['averageSpeed'], 'mph_to_minsecmi') if 'averageSpeed' in item else ''
+            flattened_data[i]['maxPaceMinSecMI'] = convert_unit(item['maxSpeed'], 'mph_to_minsecmi') if 'maxSpeed' in item else ''
 
           else:
 
