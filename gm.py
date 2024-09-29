@@ -264,10 +264,11 @@ def process_gencsv_year(arg1, arg2, arg3):
           flattened_data[i]['maxHR'] = round(item['maxHR'] or 0, 2) if 'maxHR' in item else 0
           flattened_data[i]['description']  = item['description'] if 'description' in item else ''
 
+          # specific conversions
+
           if item['activityType']['typeKey'] in ('running','treadmill_running','walking','cycling','hiking'):
 
             flattened_data[i]['distance'] = convert_unit(item['distance'], 'meters_to_miles')
-            flattened_data[i]['duration']   = convert_unit(item['duration'], 'seconds_to_duration')
 
             flattened_data[i]['averageSpeed'] = convert_unit(item['averageSpeed'], 'ms_to_mph')  if 'averageSpeed' in item else ''
             flattened_data[i]['maxSpeed']   = convert_unit(item['maxSpeed'], 'ms_to_mph')  if 'maxSpeed' in item else ''
@@ -278,11 +279,14 @@ def process_gencsv_year(arg1, arg2, arg3):
           else:
 
             flattened_data[i]['distance'] = 0
-            flattened_data[i]['duration'] = 0
             flattened_data[i]['averageSpeed'] = 0
             flattened_data[i]['maxSpeed'] = 0
             flattened_data[i]['avgPaceMinSecMI'] = 0
             flattened_data[i]['maxPaceMinSecMI'] = 0
+
+          # general conversions
+
+          flattened_data[i]['duration']   = convert_unit(item['duration'], 'seconds_to_duration')
 
         del copy_flattened
 
