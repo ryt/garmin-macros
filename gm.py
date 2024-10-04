@@ -290,12 +290,14 @@ def process_gencsv_year(arg1, arg2, arg3):
 
         del copy_flattened
 
-
+        # -- final column layout (mods: move startTimeLocal to column 1) -- #
         final_data = preserve_keys(flattened_data, [
+          'startTimeLocal',
           'activityId','activityName','activityTypeName','activityTypeId',
-          'startTimeLocal','distance','duration',
+          'distance','duration',
           'averageSpeed','maxSpeed','avgPaceMinSecMI','maxPaceMinSecMI',
-          'averageHR','maxHR','description',
+          'averageHR','maxHR',
+          'description',
         ])
 
         # sort the list by startTimeLocal with recent times at the top
