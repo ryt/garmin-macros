@@ -266,7 +266,7 @@ def process_gencsv_year(arg1, arg2, arg3):
 
           # specific conversions
 
-          if item['activityType']['typeKey'] in ('running','treadmill_running','walking','cycling','hiking'):
+          if item['activityType']['typeKey'] in ('running','treadmill_running','indoor_running','trail_running','walking','cycling','hiking'):
 
             flattened_data[i]['distance'] = convert_unit(item['distance'], 'meters_to_miles')
 
