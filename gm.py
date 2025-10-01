@@ -118,9 +118,11 @@ api = None
 
 
 today = datetime.date.today()
+lastmo = (today.replace(day=1) - datetime.timedelta(days=1)).strftime('%Y-%m') # yyyy-mm
 logs_dir = f'{os.path.abspath(os.curdir)}/logs/' # can be shared with activity-metrics
 gen_dir  = f'{os.path.abspath(os.curdir)}/gen/'  # can also be shared with activity-metrics
 gen_srv  = f'{gen_dir}services/garmin/'
+
 
 def process_export_activities_month(arg1):
   """Retrieve & export activities for month"""
@@ -129,6 +131,10 @@ def process_export_activities_month(arg1):
 
   if input_month in ('now','cur','current','tod','today','month'):
     input_month = today.strftime('%Y-%m')
+
+  elif input_month in ('last'):
+    input_month = lastmo
+
 
   if not re.match(r'^\d{4}-\d{2}$', input_month):
     sys.exit(f"Sorry, '{input_month}' is not in the YYYY-MM format. Please correct it.")
@@ -216,6 +222,9 @@ def process_gencsv_year(arg1, arg2, arg3):
   if arg2 in ('now','cur','current','tod','today','month','year'):
     arg2 = today.strftime('%Y')
 
+  elif arg2 in ('last'):
+    arg2 = lastmo
+
   if arg2:
     year = arg2
     ydir = f'{logs_dir}{year}/json/'
@@ -237,7 +246,16 @@ def process_gencsv_year(arg1, arg2, arg3):
         for file in garmin_files:
           with open(f'{ydir}{file}', 'r') as data:
             json_data = json.load(data)
+            # 2025-09-04 7p: 
+            # - attempted to add blank/empty values after each month to create separation on csv files
+            # - coding attempts via claude assist, coding system very convoluted especially the git/ srvray/ pushing
+            # - and checking system. pretty much waste of time
+            # ------
+            # blank_dict = { key: None for key in json_data[0].keys() }
+            # json_data.append(blank_dict)
+            # ------
             combined_data.append(json_data)
+            # print(len(combined_data)) # part of the attempt above
 
         flattened_data = [item for sublist in combined_data for item in sublist]
 
@@ -310,9 +328,9 @@ def process_gencsv_year(arg1, arg2, arg3):
         for row in final_data:
           csv_string += ','.join(str(escape_for_csv(row[column] if column in row else '')) for column in columns) + '\n'
 
-        csv_string = re.sub('distance',       'distanceMI',    csv_string, 1)
-        csv_string = re.sub('averageSpeed',   'avgSpeedMPH',  csv_string, 1)
-        csv_string = re.sub('maxSpeed',       'maxSpeedMPH',  csv_string, 1)
+        csv_string = re.sub('distance',       'distanceMI',   csv_string, count=1)
+        csv_string = re.sub('averageSpeed',   'avgSpeedMPH',  csv_string, count=1)
+        csv_string = re.sub('maxSpeed',       'maxSpeedMPH',  csv_string, count=1)
 
         print('- JSON successfully converted to CSV.')
 
